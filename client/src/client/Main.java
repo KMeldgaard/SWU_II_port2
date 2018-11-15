@@ -5,10 +5,24 @@
  */
 package client;
     
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 
 public class Main {
 
     public static void main(String argv[]) throws Exception {
+        
+        //kaspers test af GUI
+        //Måske skal client kode rykkes til nogle static metoder??
+        GUI f = new GUI();
+      f.setSize(500,500);
+      f.setVisible(true);
+      f.addWindowListener(new WindowAdapter(){
+          public void windowClosing(WindowEvent e){
+            System.exit(0);
+            }
+        });
         
         boolean waitingForServer = false;
         Person person1 = new Person("Mads", 22, 14);
@@ -40,6 +54,6 @@ public class Main {
         modifiedSentence = inFromServer.readLine();
         System.out.println("FROM SERVER: " + modifiedSentence);
         clientSocket.close();*/
- }
+    }
 }
 

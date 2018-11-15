@@ -6,7 +6,6 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class Client {
     
     private int portNumber;
@@ -62,12 +61,13 @@ public class Client {
     
     //skal læse strings fra serveren 
     public String inFromServer(){
-        String message = ""; 
+        String message; 
         try{
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             message = inFromServer.readLine();    
         }
         catch(IOException ie){
+            message = "Something went wrong!";
             ie.printStackTrace();
         }
         return message;

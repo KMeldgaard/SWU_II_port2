@@ -4,8 +4,15 @@ import java.io.*;
 import java.net.*;
 import client.Person;
 
+/*
+TODO:
+Implementer mySQL connector
+Implementer requests
+
+*/
+
 public class Server {
-     private int port;
+    private int port;
     private ServerSocket server;
     
     
@@ -49,6 +56,7 @@ public class Server {
                 catch(ClassNotFoundException ex){
                     ex.printStackTrace();
                 }
+            //send bekræftigelse til client
             buf.write(clientMessage);
             buf.flush();
             
