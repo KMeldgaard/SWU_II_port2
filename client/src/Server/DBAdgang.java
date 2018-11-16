@@ -9,6 +9,12 @@ import java.sql.Statement;
 import java.util.*;
 import client.Person;
 
+/**
+ * Næsten identisk med klassen fra portfølje 1
+ * Tablenavn, hvordan en person indsættes og hvordan de trækkes ud af DB
+ * @author mads & kasper
+ */
+
 public class DBAdgang {
     
      public static void indsaetPersonDB(Person enPerson)
