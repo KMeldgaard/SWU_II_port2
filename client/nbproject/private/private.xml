@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/client/Client.java</file>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/Server/Server.java</file>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/client/Main.java</file>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/Server/Request.java</file>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/client/GUI.java</file>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/client/Person.java</file>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/Server/Main.java</file>
+            <file>file:/home/kasper/Documents/Softwareudvikling/Client_server_app/client/src/Server/DBAdgang.java</file>
+        </group>
     </open-files>
 </project-private>
