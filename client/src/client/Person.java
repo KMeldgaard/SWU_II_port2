@@ -2,6 +2,7 @@
 package client;
 
 import java.io.Serializable;
+import Server.DBAdgang;
 
 public class Person implements Serializable{
     private String name;
@@ -12,7 +13,7 @@ public class Person implements Serializable{
         age = 0;
         id = 0;
     }
-    public Person(String name, int age, int id){
+    public Person(int id, String name, int age){
         this.name = name;
         this.age = age; 
         this.id = id;
@@ -36,5 +37,9 @@ public class Person implements Serializable{
         this.id = id;
     }
     
+    public void tilDB()
+    {
+        DBAdgang.indsaetPersonDB(this);
+    }
     
 }
