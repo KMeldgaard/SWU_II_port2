@@ -12,13 +12,13 @@ public class Client {
     
     private int portNumber;
     private String ip;
-    private Request req;
+    private int req;
     private Socket connection;
     private ObjectOutputStream output;
     private DataOutputStream writer;
     private String server_msg;
     
-    public Client(String ip, int portNumber, Request req){
+    public Client(String ip, int portNumber, int req){
         this.ip = ip;
         this.portNumber = portNumber;
         this.req = req;
@@ -56,16 +56,31 @@ public class Client {
     }
     
     
-    public void sendReq(){
+   /* public void sendReq(){
         if(connection.isConnected()){
             try {
-                writer.writeInt(1); //sender request attribut som int
+                System.out.println("here");
+                writer.writeBytes(Integer.toString(req)); //sender request attribut som int
+                System.out.println("here2");
                 writer.flush();
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return;
+    }*/
+    public void sendReq(){
+        try {
+            System.out.println("here");
+            OutputStreamWriter toClient = new OutputStreamWriter(connection.getOutputStream());
+            BufferedWriter buf = new BufferedWriter(toClient);
+            buf.write(Integer.toString(req));
+            buf.flush();
+            System.out.println("here2");
+        } 
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     //skal sende objekter til serveren 

@@ -55,13 +55,15 @@ public class Server {
     }
     
     private void insertPerson(){
-        ObjectInputStream person = null;
+        
         
                 try{
-                    Person newPerson = null;
-                    person = new ObjectInputStream(connectionSocket.getInputStream());
+                    
+                    ObjectInputStream person = new ObjectInputStream(connectionSocket.getInputStream());
                     try{
-                        newPerson = (Person)person.readObject();
+                        Person newPerson;
+                        Object obj = person.readObject();
+                        newPerson = (Person)obj;    
                         newPerson.tilDB();
                         System.out.println(newPerson.getName());
                         sendMessage("person was inserted");
@@ -71,7 +73,7 @@ public class Server {
                     }
                 }
                 catch(IOException ex){
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 }
 
         }
@@ -93,17 +95,18 @@ public class Server {
            
             connectionSocket = server.accept();
         
-            DataInputStream request = new DataInputStream(connectionSocket.getInputStream());
+            //ataInputStream request = new DataInputStream(connectionSocket.getInputStream());
+           /* BufferedReader inFromServer = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            String strreq  = inFromServer.readLine(); 
             
-            int req = request.readInt();
-            System.out.println(req);
+            System.out.println(strreq);
+            int req = Integer.parseInt(strreq);*/
             
-            
-            if(req == Request.GET_PERSONS.ordinal()){
+            if(this.port == Main.PORT){
                 sendList();
             }
             
-            else if(req == Request.ADD_PERSON.ordinal()){
+            else if(this.port == Main.PORT2){
                 insertPerson();
             }
                         
