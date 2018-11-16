@@ -31,6 +31,7 @@ public class Client {
             //writer = new PrintWriter(connection.getOutputStream(), true);
             output = new ObjectOutputStream(connection.getOutputStream());
             writer = new DataOutputStream(connection.getOutputStream());
+            writer.flush();
             System.out.println("you connected to the server");
             con = true;
         }
@@ -58,7 +59,8 @@ public class Client {
     public void sendReq(){
         if(connection.isConnected()){
             try {
-                writer.writeInt(req.ordinal()); //sender request attribut som int
+                writer.writeInt(1); //sender request attribut som int
+                writer.flush();
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -105,7 +107,7 @@ public class Client {
     }
     
     ArrayList<Person> recievePersons(){
-        ArrayList<Person> persons = null;
+        ArrayList<Person> persons = new ArrayList<Person>();
         try { //modtag objekt stream fra server
             ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
             try {

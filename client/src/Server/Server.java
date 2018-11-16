@@ -17,19 +17,36 @@ Implementer requests
 public class Server {
     private int port;
     private ServerSocket server;
+    Socket connectionSocket;
     
     
     public Server(int port){
         this.port = port;
-    }    
+    }   
     
-    private void sendList(Socket connectionSocket){
+    private void sendMessage(String message){
+        try {
+            OutputStreamWriter toClient = new OutputStreamWriter(connectionSocket.getOutputStream());
+            BufferedWriter buf = new BufferedWriter(toClient);
+            buf.write(message);
+            buf.flush();
+        } 
+        catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    private void sendList(){
         ObjectOutputStream list = null;
         try {
             ArrayList al = new ArrayList<Person>();
             al = DBAdgang.hentPersoner();
             list = new ObjectOutputStream(connectionSocket.getOutputStream());
+            System.out.println("here");
             list.writeObject(al);
+            System.out.println("here2");
+            sendMessage("the list was send");
         } 
         catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -37,8 +54,9 @@ public class Server {
         }
     }
     
-    private void insertPerson(Socket connectionSocket){
+    private void insertPerson(){
         ObjectInputStream person = null;
+        
                 try{
                     Person newPerson = null;
                     person = new ObjectInputStream(connectionSocket.getInputStream());
@@ -46,6 +64,7 @@ public class Server {
                         newPerson = (Person)person.readObject();
                         newPerson.tilDB();
                         System.out.println(newPerson.getName());
+                        sendMessage("person was inserted");
                     }
                     catch(ClassNotFoundException ex){
                         ex.printStackTrace();
@@ -71,20 +90,21 @@ public class Server {
 
     public void clientConnection(){
         try{
-            String clientMessage = "done";
-            Socket connectionSocket = server.accept();
+           
+            connectionSocket = server.accept();
         
             DataInputStream request = new DataInputStream(connectionSocket.getInputStream());
-           
-            Request req = Request.values()[request.readInt()];
+            
+            int req = request.readInt();
+            System.out.println(req);
             
             
-            if(req == Request.GET_PERSONS){
-                sendList(connectionSocket);
+            if(req == Request.GET_PERSONS.ordinal()){
+                sendList();
             }
             
-            else if(req == Request.ADD_PERSON){
-                insertPerson(connectionSocket);
+            else if(req == Request.ADD_PERSON.ordinal()){
+                insertPerson();
             }
                         
         }
