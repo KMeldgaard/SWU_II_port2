@@ -55,13 +55,15 @@ public class Server {
     }
     
     private void insertPerson(){
-        ObjectInputStream person = null;
+        
         
                 try{
-                    Person newPerson = null;
-                    person = new ObjectInputStream(connectionSocket.getInputStream());
+                    
+                    ObjectInputStream person = new ObjectInputStream(connectionSocket.getInputStream());
                     try{
-                        newPerson = (Person)person.readObject();
+                        Person newPerson;
+                        Object obj = person.readObject();
+                        newPerson = (Person)obj;    
                         newPerson.tilDB();
                         System.out.println(newPerson.getName());
                         sendMessage("person was inserted");
@@ -71,7 +73,7 @@ public class Server {
                     }
                 }
                 catch(IOException ex){
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 }
 
         }
@@ -93,17 +95,23 @@ public class Server {
            
             connectionSocket = server.accept();
         
-            DataInputStream request = new DataInputStream(connectionSocket.getInputStream());
             
-            int req = request.readInt();
-            System.out.println(req);
+            //Forsøg på at samle alle funktioner på én server port
+            //En request skal afgøre hvilken "service" servere skal levere
             
+            //ataInputStream request = new DataInputStream(connectionSocket.getInputStream());
+           /* BufferedReader inFromServer = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            String strreq  = inFromServer.readLine(); 
             
-            if(req == Request.GET_PERSONS.ordinal()){
+            System.out.println(strreq);
+            int req = Integer.parseInt(strreq);*/
+            
+           //De to porte med forskellige services
+            if(this.port == Main.PORT){
                 sendList();
             }
             
-            else if(req == Request.ADD_PERSON.ordinal()){
+            else if(this.port == Main.PORT2){
                 insertPerson();
             }
                         

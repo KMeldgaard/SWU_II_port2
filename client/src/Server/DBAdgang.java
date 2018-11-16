@@ -23,7 +23,7 @@ public class DBAdgang {
       properties.setProperty("autoReconnect", "true");
 
       
-      String url      = "jdbc:mysql://localhost:3306/persondb?serverTimezone=UTC&useSSL=false";
+      String url      = "jdbc:mysql://localhost:3306/person?serverTimezone=UTC&useSSL=false";
       String login    = "root";
       String password = "fynbonyt";
 
@@ -75,7 +75,7 @@ public class DBAdgang {
         
     
         while(rs.next())  // placerer cursor paa foerste tuppel
-            aL.add(new Person(rs.getString("NAVN"),rs.getInt("AGE"),rs.getInt("ID")));
+            aL.add(new Person(rs.getString("NAME"),rs.getInt("AGE"),rs.getInt("ID")));
       }
       catch(java.lang.ClassNotFoundException e)
       {

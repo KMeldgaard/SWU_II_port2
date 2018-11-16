@@ -8,17 +8,22 @@ import java.util.logging.Logger;
 import Server.Request;
 import java.util.ArrayList;
 
+/**
+ * Læg mærke til at request reelt ikke bruges til noget pt!
+ * @author Mads & Kasper
+ */
+
 public class Client {
     
     private int portNumber;
     private String ip;
-    private Request req;
+    private int req;
     private Socket connection;
     private ObjectOutputStream output;
     private DataOutputStream writer;
     private String server_msg;
     
-    public Client(String ip, int portNumber, Request req){
+    public Client(String ip, int portNumber, int req){
         this.ip = ip;
         this.portNumber = portNumber;
         this.req = req;
@@ -56,16 +61,33 @@ public class Client {
     }
     
     
-    public void sendReq(){
+   /* public void sendReq(){
         if(connection.isConnected()){
             try {
-                writer.writeInt(1); //sender request attribut som int
+                System.out.println("here");
+                writer.writeBytes(Integer.toString(req)); //sender request attribut som int
+                System.out.println("here2");
                 writer.flush();
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return;
+    }*/
+    
+    //bruges pt ikke!
+    public void sendReq(){
+        try {
+            System.out.println("here");
+            OutputStreamWriter toClient = new OutputStreamWriter(connection.getOutputStream());
+            BufferedWriter buf = new BufferedWriter(toClient);
+            buf.write(Integer.toString(req));
+            buf.flush();
+            System.out.println("here2");
+        } 
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     //skal sende objekter til serveren 
@@ -82,7 +104,8 @@ public class Client {
         }
     }
     
-    //skal læse strings fra serveren 
+    //skal læse strings fra serveren
+    //bruges pt ikke!
     public void inFromServer(){
         try{
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -95,7 +118,7 @@ public class Client {
         }
         return;
     }
-    //problemer med serveren, den kaster nogle exceptions når jeg disconnecter
+    //problemer med serveren, den kaster nogle exceptions når der disconnectes
     public void disConnect(){
         try{
             connection.close();
@@ -106,6 +129,7 @@ public class Client {
         }
     }
     
+    //modtager en liste af Person fra server
     ArrayList<Person> recievePersons(){
         ArrayList<Person> persons = new ArrayList<Person>();
         try { //modtag objekt stream fra server

@@ -74,7 +74,7 @@ public class GUI extends JFrame implements ActionListener{
         tilfoej.addActionListener(this);
         tilfoej.setActionCommand("til");
         
-        //this.update_list();
+        this.update_list();
                 
     }
         
@@ -90,23 +90,24 @@ public class GUI extends JFrame implements ActionListener{
     }
     
     private void update_list(){
-        Client client = new Client("localhost", Main.PORT, Request.GET_PERSONS);
+        Client client = new Client("localhost", Main.PORT, Request.GET_PERSONS.ordinal());
         boolean con = client.connect();
         
         if (!con){ //mest til debug
             return;
         }
         
-        client.sendReq();
+        //client.sendReq();
         ArrayList<Person> plist = client.recievePersons();
         
         try {
         //fjern alle entries og erstat med nye
         list.removeAll();
-        list.add("ID\tNAVN\tALDER\t");
+        list.add("");
+        list.add("ID  NAVN  ALDER"); //lig mærke til at listen er offer for "the courier problems".
             for (Person p : plist){               
-                list.add(p.getId()+ "\t"
-                + p.getName() + "\t"
+                list.add(p.getId()+ "  "
+                + p.getName() + "  "
                 + p.getAge());
             }
         } catch (NullPointerException ne){
@@ -124,13 +125,20 @@ public class GUI extends JFrame implements ActionListener{
             clearTextFields();
             
             //send information
-            Client client = new Client("localhost", Main.PORT, Request.ADD_PERSON);
-            client.connect();
-            client.sendReq();
+            Client client = new Client("localhost", Main.PORT2, Request.ADD_PERSON.ordinal());
+            boolean con = client.connect();
+            if (!con){ //dårlig forbindelse
+                return;
+            }
+            
+            //client.sendReq();
             client.writePerson(p);
-            client.inFromServer();
-            server_msg.setText(client.getServer_msg());
+            //client.inFromServer();
+//            server_msg.setText(client.getServer_msg());
+            server_msg.setText(p.getName() + " added to DB"); //midlertidig besked til bruger
             client.disConnect();
+            this.update_list();
+            
         } catch (java.lang.NumberFormatException e){ //input er forkert i alder
             System.out.println("NumberFormatExeption: " + e.getMessage());
         }
