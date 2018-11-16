@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import Server.Request;
 
 public class GUI extends JFrame implements ActionListener{
     
@@ -13,9 +14,8 @@ public class GUI extends JFrame implements ActionListener{
     private JTextField navn = new JTextField(12);
     private JLabel promptA = new JLabel("Alder: ");
     private JTextField alder = new JTextField(2);
-    private JLabel idLabel = new JLabel("ID: ");
-    private JTextField id = new JTextField(3);
     private JLabel pers_i_db_label = new JLabel("Personer i DB:");
+    private JLabel server_msg = new JLabel(" ");
   
     private JButton tilfoej = new JButton("Tilføj person");
     private List list = new List(15, true);
@@ -48,17 +48,15 @@ public class GUI extends JFrame implements ActionListener{
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 2;
-        add(idLabel, c);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 2;
-        add(id, c);
+        c.gridwidth = 2;
+        add(server_msg, c);
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 3;
         c.gridwidth = 2;
         add(tilfoej, c);
+        
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 5;
@@ -89,21 +87,32 @@ public class GUI extends JFrame implements ActionListener{
     private void clearTextFields(){
         navn.setText("");
         alder.setText("");
-        id.setText("");
     }
     
     private void update_list(){
-        //TODO:
-        //get connection to server and request persons
-        ArrayList<Person> plist = null;
+        Client client = new Client("localhost", Main.PORT, Request.GET_PERSONS);
+        boolean con = client.connect();
         
+        if (!con){ //mest til debug
+            return;
+        }
+        
+        client.sendReq();
+        ArrayList<Person> plist = client.recievePersons();
+        
+        try {
         //fjern alle entries og erstat med nye
         list.removeAll();
+        list.add("ID\tNAVN\tALDER\t");
             for (Person p : plist){               
-                list.add(p.getId()+ ": "
-                + p.getName() + ", "
+                list.add(p.getId()+ "\t"
+                + p.getName() + "\t"
                 + p.getAge());
             }
+        } catch (NullPointerException ne){
+            System.out.println("Persons NOT recieved");
+            ne.printStackTrace();
+        }
     }
     
     private void tilAction(){
@@ -111,10 +120,17 @@ public class GUI extends JFrame implements ActionListener{
             Person p = new Person(
                     navn.getText(),
                     Integer.parseInt(alder.getText()),
-                    -1
-            );
-//            DBAdgang.indsaetPersonDB(p);
+                    -1);
             clearTextFields();
+            
+            //send information
+            Client client = new Client("localhost", Main.PORT, Request.ADD_PERSON);
+            client.connect();
+            client.sendReq();
+            client.writePerson(p);
+            client.inFromServer();
+            server_msg.setText(client.getServer_msg());
+            client.disConnect();
         } catch (java.lang.NumberFormatException e){ //input er forkert i alder
             System.out.println("NumberFormatExeption: " + e.getMessage());
         }
